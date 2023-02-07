@@ -15,20 +15,34 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+secret_key = os.environ.get("DJANGO_SECRET_KEY")
+if secret_key is None or secret_key == "":
+    secret_key = "django-insecure-#)ndr5jg^(h3r^bs%--75gib*cuk$@yk33uqd+4k^cc@=&4srq"
+SECRET_KEY = secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
-
+allowed_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS")
+if allowed_hosts is None:
+    allowed_hosts = "localhost 127.0.0.1 [::1] chistyi-gorod.kz:5002 chistyi-gorod.kz"
+ALLOWED_HOSTS = allowed_hosts.split(" ")
 
 # Application definition
+
+
+DJANGO_SUPERUSER_USERNAME = os.environ.get("DJANGO_SUPERUSER_USERNAME")
+DJANGO_SUPERUSER_EMAIL = os.environ.get("DJANGO_SUPERUSER_EMAIL")
+DJANGO_SUPERUSER_PASSWORD = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
+if DJANGO_SUPERUSER_USERNAME is None:
+    DJANGO_SUPERUSER_USERNAME = "admin"
+    DJANGO_SUPERUSER_EMAIL = "admin@gmail.com"
+    DJANGO_SUPERUSER_PASSWORD = "admin"
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "main.applications.apps.ApplicationsConfig",
 ]
 
 MIDDLEWARE = [
@@ -69,17 +84,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
+db = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
+if os.environ.get("POSTGRES_DB") is not None:
+    db = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get("POSTGRES_DB"),
+            'USER': os.environ.get("POSTGRES_USER"),
+            'PASSWORD': os.environ.get("POSTGRES_PASSWORD"),
+            'HOST': os.environ.get("POSTGRES_HOST"),
+            'PORT': os.environ.get("POSTGRES_PORT"),
+        }
+    }
+
+DATABASES = db
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -99,7 +126,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -110,7 +136,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
