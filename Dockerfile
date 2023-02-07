@@ -9,6 +9,7 @@ ENV PYTHONUNBUFFERED 1
 RUN pip install --upgrade pip
 COPY ./req.txt .
 RUN pip install -r req.txt
+RUN python manage.py makemigrations
 # copy project
 COPY . .
 
