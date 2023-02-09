@@ -14,3 +14,8 @@ class Status(TextChoices):
     StatusOnCheck = "проверка", _("проверка")
     StatusRealization = "реализация", _("реализация")
     StatusDone = "выполнен", _("выполнен")
+
+
+class ObjectType(TextChoices):
+    Application = "application", _("application")
+    Event = "event", _("event")

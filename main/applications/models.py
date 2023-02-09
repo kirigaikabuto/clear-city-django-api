@@ -1,5 +1,5 @@
 from django.db import models
-from .common.entities import Status, ProblemType
+from .common.entities import Status, ProblemType, ObjectType
 from .common.models import Timestamped
 
 
@@ -17,43 +17,43 @@ class Application(Timestamped):
     message = models.TextField(default="",
                                )
     first_name = models.CharField(
-        max_length=255, default="",
+        max_length=255, default="", blank=True,
     )
     last_name = models.CharField(
-        max_length=255, default="",
+        max_length=255, default="", blank=True,
     )
     patronymic = models.CharField(
-        max_length=255, default="",
+        max_length=255, default="", blank=True,
     )
     phone_number = models.CharField(
-        max_length=255, default="",
+        max_length=255, default="", blank=True,
     )
     photo_url = models.CharField(
-        max_length=500, default="",
+        max_length=500, default="", blank=True,
     )
     video_url = models.CharField(
-        max_length=500, default="",
+        max_length=500, default="", blank=True,
     )
     address = models.CharField(
-        max_length=600, default="",
+        max_length=600, default="", blank=True,
     )
     longitude = models.DecimalField(decimal_places=10, max_digits=100, default=0.0)
     latitude = models.DecimalField(decimal_places=10, max_digits=100, default=0.0)
     user_id = models.CharField(
-        max_length=400, default="",
+        max_length=400, default="", blank=True,
     )
     created_date = models.CharField(
-        max_length=400, default="",
+        max_length=400, default="", blank=True,
     )
 
 
 class News(Timestamped):
     id = models.CharField(primary_key=True, max_length=500)
-    title = models.CharField(max_length=500, default="")
-    small_description = models.CharField(max_length=500, default="")
-    description = models.TextField(default="")
-    photo_url = models.CharField(max_length=600, default="")
-    author_id = models.CharField(max_length=600, default="")
+    title = models.CharField(max_length=500, default="", blank=True)
+    small_description = models.CharField(max_length=500, default="", blank=True)
+    description = models.TextField(default="", blank=True)
+    photo_url = models.CharField(max_length=600, default="", blank=True)
+    author_id = models.CharField(max_length=600, default="", blank=True)
     created_date = models.CharField(
         max_length=400, default=""
     )
@@ -61,21 +61,38 @@ class News(Timestamped):
 
 class Event(Timestamped):
     id = models.CharField(primary_key=True, max_length=500)
-    address = models.CharField(max_length=500, default="")
-    description = models.TextField(default="")
+    address = models.CharField(max_length=500, default="", blank=True)
+    description = models.TextField(default="", blank=True)
     date = models.DateField(
-        max_length=400, default=""
+        max_length=400, default="", blank=True
     )
     time = models.CharField(
-        max_length=400, default=""
+        max_length=400, default="", blank=True
     )
-    organizer_info = models.CharField(max_length=400, default="")
-    document_url = models.CharField(max_length=600, default="")
+    organizer_info = models.CharField(max_length=400, default="", blank=True)
+    document_url = models.CharField(max_length=600, default="", blank=True)
     longitude = models.DecimalField(decimal_places=10, max_digits=100, default=0.0)
     latitude = models.DecimalField(decimal_places=10, max_digits=100, default=0.0)
     user_id = models.CharField(
-        max_length=400, default=""
+        max_length=400, default="", blank=True
     )
     created_date = models.DateField(
-        max_length=400, default=""
+        max_length=400, default="", blank=True
+    )
+
+
+class FileStorage(Timestamped):
+    id = models.CharField(primary_key=True, max_length=500)
+    object_type = models.CharField(
+        choices=ObjectType.choices,
+        max_length=255, default="", blank=True
+    )
+    object_id = models.CharField(
+        max_length=400, default="", blank=True
+    )
+    file_url = models.CharField(
+        max_length=500, default="", blank=True
+    )
+    created_date = models.DateField(
+        max_length=400, default="", blank=True
     )
