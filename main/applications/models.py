@@ -3,6 +3,40 @@ from .common.entities import Status, ProblemType, ObjectType
 from .common.models import Timestamped
 
 
+class MainUser(Timestamped):
+    id = models.CharField(primary_key=True, max_length=500)
+    first_name = models.CharField(
+        max_length=255, default="", blank=True,
+    )
+    last_name = models.CharField(
+        max_length=255, default="", blank=True,
+    )
+    username = models.CharField(
+        max_length=255, default="", blank=True,
+    )
+    password = models.CharField(
+        max_length=500, default="", blank=True,
+    )
+    email = models.CharField(
+        max_length=500, default="", blank=True,
+    )
+    phone_number = models.CharField(
+        max_length=500, default="", blank=True,
+    )
+    gender = models.CharField(
+        max_length=500, default="", blank=True,
+    )
+    access_type = models.CharField(
+        max_length=500, default="", blank=True,
+    )
+    avatar = models.CharField(
+        max_length=500, default="", blank=True,
+    )
+    is_verified = models.BooleanField(
+        default=False,
+    )
+
+
 class Application(Timestamped):
     id = models.CharField(primary_key=True, max_length=500)
     app_type = models.CharField(
@@ -39,10 +73,10 @@ class Application(Timestamped):
     )
     longitude = models.DecimalField(decimal_places=10, max_digits=100, default=0.0)
     latitude = models.DecimalField(decimal_places=10, max_digits=100, default=0.0)
-    user_id = models.CharField(
-        max_length=400, default="", blank=True,
+    user = models.ForeignKey(
+        to="MainUser", on_delete=models.CASCADE, default=""
     )
-    created_date = models.CharField(
+    created_date = models.DateField(
         max_length=400, default="", blank=True,
     )
 
@@ -53,9 +87,10 @@ class News(Timestamped):
     small_description = models.CharField(max_length=500, default="", blank=True)
     description = models.TextField(default="", blank=True)
     photo_url = models.CharField(max_length=600, default="", blank=True)
-    author_id = models.CharField(max_length=600, default="", blank=True)
-    created_date = models.CharField(
-        max_length=400, default=""
+    author = models.ForeignKey(
+        to="MainUser", on_delete=models.CASCADE, default=""
+    )
+    created_date = models.DateField(
     )
 
 
@@ -73,8 +108,8 @@ class Event(Timestamped):
     document_url = models.CharField(max_length=600, default="", blank=True)
     longitude = models.DecimalField(decimal_places=10, max_digits=100, default=0.0)
     latitude = models.DecimalField(decimal_places=10, max_digits=100, default=0.0)
-    user_id = models.CharField(
-        max_length=400, default="", blank=True
+    user = models.ForeignKey(
+        to="MainUser", on_delete=models.CASCADE, default=""
     )
     created_date = models.DateField(
         max_length=400, default="", blank=True
@@ -96,3 +131,38 @@ class FileStorage(Timestamped):
     created_date = models.DateField(
         max_length=400, default="", blank=True
     )
+
+
+class UserEvents(Timestamped):
+    id = models.CharField(primary_key=True, max_length=500)
+    user = models.ForeignKey(
+        to="MainUser", on_delete=models.CASCADE, default=""
+    )
+    event = models.ForeignKey(
+        to="Event", on_delete=models.CASCADE, default=""
+    )
+    created_date = models.DateField(
+
+    )
+
+
+class Comments(Timestamped):
+    id = models.CharField(primary_key=True, max_length=500)
+    message = models.TextField()
+    user = models.ForeignKey(
+        to="MainUser", on_delete=models.CASCADE, default=""
+    )
+    obj_id = models.CharField(max_length=500, default="", blank=True)
+    obj_type = models.CharField(
+        choices=ObjectType.choices,
+        max_length=255, default="", blank=True
+    )
+    created_date = models.DateField()
+
+
+class Feedback(Timestamped):
+    id = models.CharField(primary_key=True, max_length=500)
+    message = models.TextField(blank=True)
+    full_name = models.CharField(max_length=500, default="", blank=True)
+    phone_number = models.CharField(max_length=500, default="", blank=True)
+    created_date = models.DateField()
