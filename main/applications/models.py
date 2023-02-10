@@ -80,6 +80,9 @@ class Application(Timestamped):
         max_length=400, default="", blank=True,
     )
 
+    def __str__(self):
+        return f"{self.id} | {self.app_type} | {self.app_status}"
+
 
 class News(Timestamped):
     id = models.CharField(primary_key=True, max_length=500)
