@@ -141,8 +141,10 @@ class UserEvents(Timestamped):
     user = models.ForeignKey(
         to="MainUser", on_delete=models.CASCADE, default=""
     )
-    event = models.ForeignKey(
-        to="Event", on_delete=models.CASCADE, default=""
+    obj_id = models.CharField(max_length=500, default="", blank=True)
+    obj_type = models.CharField(
+        choices=ObjectType.choices,
+        max_length=255, default="", blank=True
     )
     created_date = models.DateField(
 
