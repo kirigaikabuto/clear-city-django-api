@@ -48,7 +48,7 @@ class Application(Timestamped):
         max_length=255,
         default="", null=True, blank=True,
     )
-    message = models.TextField(default="",
+    message = models.TextField(default="", blank=True,
                                )
     first_name = models.CharField(
         max_length=255, default="", blank=True,
